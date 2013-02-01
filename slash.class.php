@@ -2,12 +2,12 @@
 /**
  * This class is used to store all information (configuration, db instance, view datas, user datas, etc...).
  * @author     Laurent <info@tild.com>
- * @version    SVN: $Id$
+ * @version    $Id$
  */
 
-class slashConfig
+class slashConfig extends stdClass
 {
-    private static $env = null;
+    public static $datas = null;
     
     /**
      * This init method is called by all methods of this class
@@ -18,28 +18,29 @@ class slashConfig
     private static function &init($path = null)
     {
         /**
-         * Check status of the private $env variable (used internally to store the config's datas)
+         * Check status of the private $datas variable (used internally to store the config's datas)
          */
-        if (!is_object(self::$env)) 
+        if (!is_object(self::$datas)) 
         {
-            self::$env = new stdClass();
+            self::$datas = new slashConfig();
         }
-        
+
         if(empty($path))
         {   // If no path, return the complete object
-            return self::$env;
+            return self::$datas;
         }
         
         $attrs = explode('/', $path);
         
-        $refObject =& self::$env;
+        $refObject =& self::$datas;
         $lastKey = end(array_keys($attrs)); // Get the last array key
         foreach($attrs as $key => $attr)
         {
             if(!isset($refObject->{$attr})) // If no object exist before
             {
-                if($key !== $lastKey) {   // And if it's not the last branch of the config tree
-                    $refObject->{$attr} = new stdClass();   // Create the branch
+                if($key !== $lastKey)    // And if it's not the last branch of the config tree
+				{
+                    $refObject->{$attr} = new slashConfig();   // Create the branch
                 }
                 else
                 {
@@ -61,8 +62,8 @@ class slashConfig
     
     /**
      * Add a new configuration
-     * eq slashConfig::add('conf/datas/foo', 'bar');
-     * echo $confRegistry->conf->datas->foo
+     * eq $MyConf = slashConfig::add('conf/datas/foo', 'bar');
+     * echo $MyConf->conf->datas->foo
      *      bar
      * 
      * @param string $path The path where the new configuration value must be set eq. conf/datas/foo
@@ -73,7 +74,6 @@ class slashConfig
     {
         $tree =& self::init($path);
         $tree = $value;
-		var_dump($tree);
     }
     
     public static function delete()
@@ -92,7 +92,6 @@ class slashConfig
     public static function get($path = null)
     {
         $tree =& self::init($path);
-        
         return $tree;
     }
 }

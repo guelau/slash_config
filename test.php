@@ -27,20 +27,28 @@
 		<code>
 			&lt;?php
 				slashConfig::add('conf/datas/foo', 'bar');
+			?&gt
 		</code>
-		<pre>
-		</pre>
+		<pre><?php slashConfig::add('conf/datas/foo', 'bar'); ?></pre>
 		
-		<h2>Read a new config</h2>
+		<h2>Reading the configation object</h2>
 		<code>
 			&lt;?php
-				echo slashConfig::get('conf/datas/foo');
+				$slash = slashConfig::get();
+				var_dump( $slash ); 
+				echo "foo = ", $slash->conf->datas->foo;
+			?&gt
 		</code>
-		<pre>
-			<?php
-				var_dump( slashConfig::get('conf/datas/foo') );
-			?>
-		</pre>
+		<pre><?php $slash = slashConfig::get(); var_dump( $slash ); 
+		echo "foo = ", $slash->conf->datas->foo; ?></pre>
+		
+		<h2>Reading a key</h2>
+		<code>
+			&lt;?php
+				echo "conf/datas/foo = ", slashConfig::get('conf/datas/foo');
+			?&gt
+		</code>
+		<pre><?php echo "conf/datas/foo = ", slashConfig::get('conf/datas/foo'); ?></pre>
 	</div>
 	<p id="credit"><a href="http://laurent.tild.com">Laurent</a> / <a href="http://tild.com">Tild Online Software (@gency)</a></p>
 </body>
