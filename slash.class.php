@@ -5,9 +5,9 @@
  * @version    $Id$
  */
 
-class slashConfig extends stdClass
+class slashConfig
 {
-    public static $datas = null;
+    public static $storage = null;
     
     /**
      * This init method is called by all methods of this class
@@ -18,21 +18,21 @@ class slashConfig extends stdClass
     private static function &init($path = null)
     {
         /**
-         * Check status of the private $datas variable (used internally to store the config's datas)
+         * Check status of the private $storage variable (used internally to store the config's datas)
          */
-        if (!is_object(self::$datas)) 
+        if (!is_object(self::$storage)) 
         {
-            self::$datas = new slashConfig();
+            self::$storage = new slashConfigStorage();
         }
 
         if(empty($path))
         {   // If no path, return the complete object
-            return self::$datas;
+            return self::$storage;
         }
         
         $attrs = explode('/', $path);
         
-        $refObject =& self::$datas;
+        $refObject =& self::$storage;
         $lastKey = end(array_keys($attrs)); // Get the last array key
         foreach($attrs as $key => $attr)
         {
@@ -40,7 +40,7 @@ class slashConfig extends stdClass
             {
                 if($key !== $lastKey)    // And if it's not the last branch of the config tree
 				{
-                    $refObject->{$attr} = new slashConfig();   // Create the branch
+                    $refObject->{$attr} = new slashConfigStorage();   // Create the branch
                 }
                 else
                 {
@@ -94,4 +94,8 @@ class slashConfig extends stdClass
         $tree =& self::init($path);
         return $tree;
     }
+}
+
+class slashConfigStorage extends stdClass
+{
 }
